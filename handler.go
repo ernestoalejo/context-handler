@@ -2,8 +2,9 @@ package handler
 
 import (
 	"bytes"
-	"log"
+	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/juju/errors"
 	"golang.org/x/net/context"
@@ -50,7 +51,8 @@ func Ctx(fn CtxHandler) http.HandlerFunc {
 		ctx := context.Background()
 
 		if err := fn(ctx, wbuf, r); err != nil {
-			log.Println(errors.ErrorStack(err))
+			separator := "--------------------------------------------------"
+			fmt.Fprintf(os.Stderr, "HANDLER ERROR:\n%s\n%s\n%s", separator, errors.ErrorStack(err), separator)
 			http.Error(wbuf, "handler error", http.StatusInternalServerError)
 		}
 
