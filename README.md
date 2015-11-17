@@ -19,7 +19,7 @@ go get github.com/ernestoalejo/context-handler
  - Buffer responses to return errors to users correctly.
  - Read JSON in POST requests easily.
  - Return errors easily from the handler.
- - Show stack traces of errors.
+ - Show stack traces of errors in stderr.
 
 
 ### Usage
