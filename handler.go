@@ -2,7 +2,6 @@ package handler
 
 import (
 	"bytes"
-	"encoding/json"
 	"log"
 	"net/http"
 
@@ -12,19 +11,6 @@ import (
 
 // CtxHandler should be implemented by the handlers.
 type CtxHandler func(ctx context.Context, w http.ResponseWriter, r *http.Request) error
-
-// ReadJSON checks the request to see if it's a POST one; and reads the JSON data.
-func ReadJSON(r *http.Request, data interface{}) error {
-	if r.Method != "POST" {
-		return errors.New("bad method")
-	}
-
-	if err := json.NewDecoder(r.Body).Decode(data); err != nil {
-		return errors.Trace(err)
-	}
-
-	return nil
-}
 
 type handlerFunc func(ctx context.Context, w http.ResponseWriter, r *http.Request) error
 
