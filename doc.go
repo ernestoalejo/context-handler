@@ -1,2 +1,2 @@
-// Go HTTP handlers using context.
+// Package handler implements Go HTTP handlers using context.
 package handler

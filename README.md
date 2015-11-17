@@ -1,6 +1,8 @@
 
 # context-handler
 
+[![GoDoc](https://godoc.org/github.com/ernestoalejo/context-handler?status.svg)](https://godoc.org/github.com/ernestoalejo/context-handler)
+
 Go HTTP handlers using context.
 
 
