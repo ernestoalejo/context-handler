@@ -52,7 +52,7 @@ func Ctx(fn CtxHandler) http.HandlerFunc {
 
 		if err := fn(ctx, wbuf, r); err != nil {
 			separator := "--------------------------------------------------"
-			fmt.Fprintf(os.Stderr, "HANDLER ERROR:\n%s\n%s\n%s", separator, errors.ErrorStack(err), separator)
+			fmt.Fprintf(os.Stderr, "HANDLER ERROR:\n%s\n%s\n%s\n", separator, errors.ErrorStack(err), separator)
 			http.Error(wbuf, "handler error", http.StatusInternalServerError)
 		}
 
