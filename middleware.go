@@ -29,13 +29,13 @@ func AddMiddleware(middleware Middleware) {
 
 func runMiddlewares(ctx context.Context, w http.ResponseWriter, r *http.Request, handler CtxHandler, current int) error {
 	if current >= len(middlewares) {
-		return errors.Trace(handler(ctx, w, r))
+		return handler(ctx, w, r)
 	}
 
 	err := middlewares[current](ctx, w, r, func() error {
 		return runMiddlewares(ctx, w, r, handler, current+1)
 	})
-	return errors.Trace(err)
+	return err
 }
 
 func clientErrorMiddleware(ctx context.Context, w http.ResponseWriter, r *http.Request, next NextMiddlewareFn) error {
