@@ -17,7 +17,7 @@ go get github.com/ernestoalejo/context-handler
 
  - Pass context to all handlers.
  - Buffer responses to return errors to users correctly.
- - Read JSON in POST requests easily.
+ - Read and write JSON in POST requests easily.
  - Return errors easily from the handler.
  - Show stack traces of errors in stderr.
 
