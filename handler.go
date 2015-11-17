@@ -47,9 +47,9 @@ func Ctx(fn CtxHandler) http.HandlerFunc {
 
 		ctx := context.Background()
 
-		if err := fn(ctx, wbuf, r); err != nil {
-			activeLogger(ctx, r, err)
-			http.Error(wbuf, "handler error", http.StatusInternalServerError)
+		if err := runMiddlewares(ctx, wbuf, r, fn, 0); err != nil {
+			http.Error(wbuf, "unhandled error", http.StatusInternalServerError)
+			return
 		}
 
 		for k, v := range wbuf.header {

@@ -19,7 +19,9 @@ go get github.com/ernestoalejo/context-handler
  - Buffer responses to return errors to users correctly.
  - Read and write JSON in POST requests easily.
  - Return errors easily from the handler.
- - Show stack traces of errors in stderr (configurable in App Engine).
+ - Show stack traces of errors in stderr (compatible with App Engine).
+ - Configurable middlewares.
+ - Auto load App Engine context from the request.
 
 
 ### Usage
