@@ -43,6 +43,7 @@ func (w *AppResponseWriter) WriteHeader(statusCode int) {
 // Reset removes any content in the memory buffer for the response.
 func (w *AppResponseWriter) Reset() {
 	w.buffer.Reset()
+	w.header = make(http.Header)
 }
 
 // Ctx adapts a context handler to the standard HTTP lib contract.
