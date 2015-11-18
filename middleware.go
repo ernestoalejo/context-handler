@@ -6,11 +6,6 @@ import (
 	"golang.org/x/net/context"
 )
 
-func init() {
-	AddMiddleware(loggerMiddleware)
-	AddMiddleware(clientErrorMiddleware)
-}
-
 // Middleware should be implemented by the functions that want to intercept requests
 // or responses.
 type Middleware func(ctx context.Context, w http.ResponseWriter, r *http.Request, next NextMiddlewareFn) error
@@ -26,6 +21,12 @@ func AddMiddleware(middleware Middleware) {
 	middlewares = append(middlewares, middleware)
 }
 
+// ClearMiddlewares cleans the list of applied middlewares to let the app choose the order
+// and what ones get activated with the requests.
+func ClearMiddlewares(middleware Middleware) {
+	middlewares = []Middleware{}
+}
+
 func runMiddlewares(ctx context.Context, w http.ResponseWriter, r *http.Request, handler CtxHandler, current int) error {
 	if current >= len(middlewares) {
 		return handler(ctx, w, r)
@@ -34,14 +35,5 @@ func runMiddlewares(ctx context.Context, w http.ResponseWriter, r *http.Request,
 	err := middlewares[current](ctx, w, r, func() error {
 		return runMiddlewares(ctx, w, r, handler, current+1)
 	})
-	return err
-}
-
-func clientErrorMiddleware(ctx context.Context, w http.ResponseWriter, r *http.Request, next NextMiddlewareFn) error {
-	err := next()
-	if err != nil {
-		http.Error(w, "handler error", http.StatusInternalServerError)
-	}
-
 	return err
 }
