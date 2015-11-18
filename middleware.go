@@ -12,7 +12,7 @@ type Middleware func(ctx context.Context, w http.ResponseWriter, r *http.Request
 
 // NextMiddlewareFn should be called after the processing in the middleware finishes to follow the chain. An
 // instance of this function type will be passed to each middleware call.
-type NextMiddlewareFn func() error
+type NextMiddlewareFn func(ctx context.Context) error
 
 var middlewares []Middleware
 
@@ -32,7 +32,7 @@ func runMiddlewares(ctx context.Context, w http.ResponseWriter, r *http.Request,
 		return handler(ctx, w, r)
 	}
 
-	err := middlewares[current](ctx, w, r, func() error {
+	err := middlewares[current](ctx, w, r, func(ctx context.Context) error {
 		return runMiddlewares(ctx, w, r, handler, current+1)
 	})
 	return err
