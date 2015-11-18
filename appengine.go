@@ -95,6 +95,7 @@ func LoggerMiddleware(ctx context.Context, w http.ResponseWriter, r *http.Reques
 func ClientErrorMiddleware(ctx context.Context, w http.ResponseWriter, r *http.Request, next NextMiddlewareFn) error {
 	err := next(ctx)
 	if err != nil {
+		w.(*AppResponseWriter).Reset()
 		http.Error(w, "handler error", http.StatusInternalServerError)
 	}
 
