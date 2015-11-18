@@ -96,7 +96,8 @@ func ClientErrorMiddleware(ctx context.Context, w http.ResponseWriter, r *http.R
 	err := next(ctx)
 	if err != nil {
 		w.(*AppResponseWriter).Reset()
-		http.Error(w, "handler error", http.StatusInternalServerError)
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 
 	return err
