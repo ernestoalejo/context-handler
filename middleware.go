@@ -23,7 +23,7 @@ func AddMiddleware(middleware Middleware) {
 
 // ClearMiddlewares cleans the list of applied middlewares to let the app choose the order
 // and what ones get activated with the requests.
-func ClearMiddlewares(middleware Middleware) {
+func ClearMiddlewares() {
 	middlewares = []Middleware{}
 }
 
