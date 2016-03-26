@@ -46,9 +46,7 @@ func main() {
   http.HandleFunc("/", handler.Ctx(homeHandler))
   http.HandleFunc("/health", handler.Ctx(healthHandler))
 
-  if err := handler.ServeGracefully(9000, 30*time.Second); err != nil {
-    log.Fatal(err)
-  }
+  handler.ServeGracefully(9000, 30*time.Second)
 }
 
 func homeHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
