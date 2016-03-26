@@ -99,9 +99,9 @@ func ClientErrorMiddleware(ctx context.Context, w http.ResponseWriter, r *http.R
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 
 		if appengine.IsDevAppServer() {
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		} else {
 			http.Error(w, errors.ErrorStack(err), http.StatusInternalServerError)
+		} else {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		}
 	}
 
