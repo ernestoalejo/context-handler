@@ -3,7 +3,7 @@
 package handler
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -19,7 +19,7 @@ func init() {
 // LoggerMiddleware logs to stderr the error.
 func LoggerMiddleware(ctx context.Context, w http.ResponseWriter, r *http.Request, next NextMiddlewareFn) error {
 	if err := next(ctx); err != nil {
-		fmt.Fprintf(os.Stderr, "HANDLER ERROR:\n%s\n", errors.ErrorStack(err))
+		log.Fprintf(os.Stderr, "HANDLER ERROR:\n%s\n", errors.ErrorStack(err))
 	}
 
 	return nil
