@@ -16,11 +16,10 @@ func init() {
 	AddMiddleware(ClientErrorMiddleware)
 }
 
-// LoggerMiddlewares logs to stderr the error.
+// LoggerMiddleware logs to stderr the error.
 func LoggerMiddleware(ctx context.Context, w http.ResponseWriter, r *http.Request, next NextMiddlewareFn) error {
 	if err := next(ctx); err != nil {
-		separator := "--------------------------------------------------"
-		fmt.Fprintf(os.Stderr, "HANDLER ERROR:\n%s\n%s\n%s\n", separator, errors.ErrorStack(err), separator)
+		fmt.Fprintf(os.Stderr, "HANDLER ERROR:\n%s\n", errors.ErrorStack(err))
 	}
 
 	return nil
@@ -30,9 +29,14 @@ func LoggerMiddleware(ctx context.Context, w http.ResponseWriter, r *http.Reques
 func ClientErrorMiddleware(ctx context.Context, w http.ResponseWriter, r *http.Request, next NextMiddlewareFn) error {
 	err := next(ctx)
 	if err != nil {
-		w.(*AppResponseWriter).Reset()
+		w.(*appResponseWriter).Reset()
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+
+		if os.Getenv("DEBUG") == "true" {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		} else {
+			http.Error(w, errors.ErrorStack(err), http.StatusInternalServerError)
+		}
 	}
 
 	return err

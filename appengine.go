@@ -55,7 +55,7 @@ func ContextTimeout(ctx context.Context, w http.ResponseWriter, r *http.Request,
 // ContextTimeoutFailFast sets a shorter timeout in the context of interactive requests and allows
 // the previous middleware to log or answer request timeouts. Be sure you process the
 // "request timeout" error or it will panic when finishing the middleware stack. It is not activated
-// by deault; but you can clear the middleware stack and put it instead of ContextTimeout().
+// by default; but you can clear the middleware stack and put it instead of ContextTimeout().
 func ContextTimeoutFailFast(ctx context.Context, w http.ResponseWriter, r *http.Request, next NextMiddlewareFn) error {
 	secs := 15 * time.Second
 	if r.Header.Get("X-AppEngine-QueueName") != "" || r.Header.Get("X-AppEngine-Cron") != "" {
@@ -95,9 +95,14 @@ func LoggerMiddleware(ctx context.Context, w http.ResponseWriter, r *http.Reques
 func ClientErrorMiddleware(ctx context.Context, w http.ResponseWriter, r *http.Request, next NextMiddlewareFn) error {
 	err := next(ctx)
 	if err != nil {
-		w.(*AppResponseWriter).Reset()
+		w.(*appResponseWriter).Reset()
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+
+		if appengine.IsDevAppServer() {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		} else {
+			http.Error(w, errors.ErrorStack(err), http.StatusInternalServerError)
+		}
 	}
 
 	return err
