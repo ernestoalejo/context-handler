@@ -22,6 +22,8 @@ go get github.com/ernestoalejo/context-handler
  - Show stack traces of errors in stderr (compatible with App Engine).
  - Configurable middlewares.
  - Auto load App Engine context from the request.
+ - Graceful HTTP listener.
+ - Use `gin` in development to autoreload the server.
 
 
 ### Usage
@@ -32,6 +34,8 @@ package main
 import (
   "fmt"
   "net/http"
+  "log"
+  "time"
 
   "github.com/ernestoalejo/context-handler"
   "github.com/juju/errors"
@@ -41,7 +45,10 @@ import (
 func main() {
   http.HandleFunc("/", handler.Ctx(homeHandler))
   http.HandleFunc("/health", handler.Ctx(healthHandler))
-  http.ListenAndServe(":8080", nil)
+
+  if err := handler.ServeGracefully(9000, 30*time.Second); err != nil {
+    log.Fatal(err)
+  }
 }
 
 func homeHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
