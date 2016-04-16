@@ -95,7 +95,7 @@ func LoggerMiddleware(ctx context.Context, w http.ResponseWriter, r *http.Reques
 func ClientErrorMiddleware(ctx context.Context, w http.ResponseWriter, r *http.Request, next NextMiddlewareFn) error {
 	err := next(ctx)
 	if err != nil {
-		w.(*appResponseWriter).Reset()
+		w.(*AppResponseWriter).Reset()
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 
 		if appengine.IsDevAppServer() {
